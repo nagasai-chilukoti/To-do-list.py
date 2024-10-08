@@ -1,72 +1,39 @@
-from tkinter import *
+import tkinter
+import tkinter.messagebox
+import pickle
 
-def add_task():
-    task = entry_task.get()
-    if task:
-        listbox_tasks.insert(END, task)
-        entry_task.delete(0, END)
+root = tkinter.Tk()
+root.title("To-Do List by @TokyoEdtech")
 
-def delete_task():
-    try:
-        index = listbox_tasks.curselection()[0]
-        listbox_tasks.delete(index)
-    except IndexError:
-        pass
+def add_task(): 
+    task = entry_task.get()     
+    if task != "": 
+        listbox_tasks.insert(tkinter.END, task)         
+        entry_task.delete(0, tkinter.END)     
+    else: 
+        tkinter.messagebox.showwarning(title="Warning!", message="You must enter a task.")
 
-window = Tk()
-window.geometry("700x700")
-window.title("To-Do List App")
+def delete_task():    
+    try: 
+        task_index = listbox_tasks.curselection()[0]         
+        listbox_tasks.delete(task_index)     
+    except: 
+        tkinter.messagebox.showwarning(title="Warning!", message="You must select a task.") 
 
+frame_tasks = tkinter.Frame(root) 
+frame_tasks.pack() 
+listbox_tasks = tkinter.Listbox(frame_tasks, height=10, width=50) 
+listbox_tasks.pack(side=tkinter.LEFT) 
+scrollbar_tasks = tkinter.Scrollbar(frame_tasks) 
+scrollbar_tasks.pack(side=tkinter.RIGHT, fill=tkinter.Y) 
+listbox_tasks.config(yscrollcommand=scrollbar_tasks.set) 
+scrollbar_tasks.config(command=listbox_tasks.yview) 
 
-label_title = Label(window,
-                    text="To-Do List",
-                    font=("Arial", 30, "bold"),
-                    fg="navy",
-                    bg="lightyellow",
-                    width=20,
-                    height=2,
-                    relief=RAISED)
-label_title.pack(pady=20)
+entry_task = tkinter.Entry(root, width=50)
+entry_task.pack() 
+button_add_task = tkinter.Button(root, text="Add task", width=48, command=add_task) 
+button_add_task.pack() 
+button_delete_task = tkinter.Button(root, text="Delete task", width=48, command=delete_task) 
+button_delete_task.pack() 
 
-label_add_task = Label(window,
-                       text="Add Task:",
-                       font=("Arial", 20, "bold"),
-                       fg="purple")
-label_add_task.place(x=10, y=150)
-
-label_tasks = Label(window,
-                    text="Tasks to do:  ",
-                    font=("Arial", 20, "bold"),
-                    fg="green")
-label_tasks.place(x=10, y=300)
-
-
-entry_task = Entry(window, font=("Arial", 16))
-entry_task.place(x=170, y=150, width=300)
-
-button_add_task = Button(window,
-                         text="Add Task",
-                         bg="orange",
-                         fg="black",
-                         font=("Arial", 14),
-                         command=add_task,
-                         relief=RAISED,
-                         bd=3)
-button_add_task.place(x=470, y=150, width=100)
-
-button_delete_task = Button(window,
-                            text="Delete Task",
-                            bg="red",
-                            fg="white",
-                            font=("Arial", 14),
-                            command=delete_task,
-                            relief=RAISED,
-                            bd=3)
-button_delete_task.place(x=590, y=150, width=110)
-
-
-listbox_tasks = Listbox(window, font=("Arial", 16), bg="lightgrey", selectbackground="lightblue")
-listbox_tasks.place(x=200, y=300, width=540, height=300)
-
-
-window.mainloop()
+root.mainloop()
